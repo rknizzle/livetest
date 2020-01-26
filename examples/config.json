@@ -1,0 +1,35 @@
+{
+    "concurrency": 3,
+    "jobs": [
+        {
+            "expectedResponse": {
+                "body": {
+                    "data": "true"
+                },
+                "statusCode": 200
+            },
+            "frequency": 10000,
+            "headers": {},
+            "httpMethod": "GET",
+            "requestBody": {},
+            "timeout": 3000,
+            "title": "example 1",
+            "url": "http://example1.com"
+        },
+        {
+            "expectedResponse": {
+                "body": {
+                    "data": "true"
+                },
+                "statusCode": 200
+            },
+            "frequency": 10000,
+            "headers": {},
+            "httpMethod": "GET",
+            "requestBody": {},
+            "timeout": 3000,
+            "title": "example 2",
+            "url": "http://example2.com"
+        }
+    ]
+}
