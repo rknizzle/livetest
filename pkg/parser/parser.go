@@ -4,7 +4,7 @@ package parser
 
 import (
 	"encoding/json"
-	"github.com/rknizzle/testlive/pkg/job"
+	"github.com/rknizzle/livetest/pkg/job"
 	"os"
 )
 

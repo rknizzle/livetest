@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/rknizzle/testlive/pkg/parser"
-	"github.com/rknizzle/testlive/pkg/scheduler"
+	"github.com/rknizzle/livetest/pkg/parser"
+	"github.com/rknizzle/livetest/pkg/scheduler"
 	"net/http"
 	"time"
 )

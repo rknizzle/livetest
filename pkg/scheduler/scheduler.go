@@ -3,7 +3,7 @@
 package scheduler
 
 import (
-	"github.com/rknizzle/testlive/pkg/job"
+	"github.com/rknizzle/livetest/pkg/job"
 	"net/http"
 	"time"
 )
