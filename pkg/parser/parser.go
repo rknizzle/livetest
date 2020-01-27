@@ -9,13 +9,13 @@ import (
 )
 
 // Stores the configuration
-type config struct {
+type Config struct {
 	Jobs        []job.Job `json:"jobs"`
 	Concurrency int       `json:"concurrency"`
 }
 
 // Parses the specified config file and loads the data into a config object
-func ParseFile(filepath string) config {
+func ParseFile(filepath string) Config {
 	// read in the config file
 	configFile, err := os.Open(filepath)
 	if err != nil {
@@ -23,7 +23,7 @@ func ParseFile(filepath string) config {
 	}
 
 	// convert the JSON into a config object
-	c := config{}
+	c := Config{}
 	jsonParser := json.NewDecoder(configFile)
 	err = jsonParser.Decode(&c)
 	if err != nil {
