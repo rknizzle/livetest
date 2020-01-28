@@ -10,7 +10,7 @@ import (
 
 type Result struct {
 	ID  int
-	Res http.Response
+	Res *http.Response
 	Err error
 }
 
@@ -42,6 +42,6 @@ func execute(job *job.Job, resChan chan<- Result) {
 	// execute the HTTP request
 	resp, err := client.Do(req)
 
-	r := Result{job.ID, *resp, err}
+	r := Result{job.ID, resp, err}
 	resChan <- r
 }
