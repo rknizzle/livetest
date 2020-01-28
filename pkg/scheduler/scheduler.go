@@ -8,6 +8,12 @@ import (
 	"time"
 )
 
+type Result struct {
+  ID int
+  res http.Response
+  err error
+}
+
 // Create a ticker for a job to trigger it periodically
 func Schedule(j job.Job, interval time.Duration, resChan chan<- *http.Response) *time.Ticker {
 	ticker := time.NewTicker(interval)
