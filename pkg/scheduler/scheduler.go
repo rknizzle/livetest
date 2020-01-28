@@ -9,20 +9,20 @@ import (
 )
 
 type Result struct {
-  ID int
-  res http.Response
-  err error
+	ID  int
+	Res http.Response
+	Err error
 }
 
 // Create a ticker for a job to trigger it periodically
-func Schedule(j job.Job, interval time.Duration, resChan chan<- *http.Response) *time.Ticker {
+func Schedule(j *job.Job, interval time.Duration, resChan chan<- Result) *time.Ticker {
 	ticker := time.NewTicker(interval)
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				// run the job
-				execute(&j, resChan)
+				execute(j, resChan)
 			}
 		}
 	}()
@@ -30,17 +30,18 @@ func Schedule(j job.Job, interval time.Duration, resChan chan<- *http.Response) 
 }
 
 // Sends an HTTP request for a job
-func execute(job *job.Job, resChan chan<- *http.Response) {
+func execute(job *job.Job, resChan chan<- Result) {
 	client := &http.Client{}
 
 	// configure the HTTP request
-	r, err := http.NewRequest(job.HTTPMethod, job.URL, nil)
+	req, err := http.NewRequest(job.HTTPMethod, job.URL, nil)
 	if err != nil {
 		panic(err)
 	}
 
 	// execute the HTTP request
-	resp, _ := client.Do(r)
-	// TODO: pass in and handle errors as well
-	resChan <- resp
+	resp, err := client.Do(req)
+
+	r := Result{job.ID, *resp, err}
+	resChan <- r
 }
