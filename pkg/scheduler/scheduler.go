@@ -12,9 +12,9 @@ import (
 )
 
 type Result struct {
-	ID  int
-	Res *http.Response
-	Err error
+	Title string
+	Res   *http.Response
+	Err   error
 }
 
 // Create a ticker for a job to trigger it periodically
