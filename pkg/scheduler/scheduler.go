@@ -61,6 +61,6 @@ func execute(job *job.Job, resChan chan<- Result) {
 	// execute the HTTP request
 	resp, err := client.Do(req)
 
-	r := Result{job.ID, resp, err}
+	r := Result{job.Title, resp, err}
 	resChan <- r
 }
