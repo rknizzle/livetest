@@ -1,5 +1,13 @@
 {
     "concurrency": 3,
+    "datastore": {
+        "db": "postgres",
+        "dbname": "postgres",
+        "host": "localhost",
+        "password": "password",
+        "port": 5432,
+        "user": "postgres"
+    },
     "jobs": [
         {
             "expectedResponse": {
