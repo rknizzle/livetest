@@ -37,7 +37,7 @@ func main() {
 	}
 	for res := range resChan {
 		for _, j := range config.Jobs {
-			if j.ID == res.ID {
+			if j.Title == res.Title {
 				// check for error
 				if res.Err != nil {
 					fmt.Println("Failing with error:")
