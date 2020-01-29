@@ -12,6 +12,15 @@ import (
 type Config struct {
 	Jobs        []*job.Job `json:"jobs"`
 	Concurrency int        `json:"concurrency"`
+	Datastore   DatastoreConfig
+}
+
+type DatastoreConfig struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DBname   string
 }
 
 // Parses the specified config file and loads the data into a config object
