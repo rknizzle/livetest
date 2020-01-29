@@ -12,6 +12,7 @@ type Job struct {
 	Frequency        int      `json:"frequency"`
 	Status           string   `json:"status"`
 	ExpectedResponse Response `json:"expectedResponse"`
+	RequestBody map[string]interface{} `json:"requestBody"`
 }
 
 type Response struct {

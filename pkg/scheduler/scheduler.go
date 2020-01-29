@@ -3,7 +3,10 @@
 package scheduler
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/rknizzle/livetest/pkg/job"
+	"io"
 	"net/http"
 	"time"
 )
@@ -33,10 +36,26 @@ func Schedule(j *job.Job, interval time.Duration, resChan chan<- Result) *time.T
 func execute(job *job.Job, resChan chan<- Result) {
 	client := &http.Client{}
 
-	// configure the HTTP request
-	req, err := http.NewRequest(job.HTTPMethod, job.URL, nil)
+	// set body to nil unless there is a RequestBody to add
+	var body io.Reader = nil
+	// if the RequestBody map is not empty
+	if len(job.RequestBody) > 0 {
+		// convert the body into an io.Reader to pass to the http request
+		requestByte, err := json.Marshal(job.RequestBody)
+		if err != nil {
+			panic(err)
+		}
+		body = bytes.NewBuffer(requestByte)
+	}
+
+	// configure http request
+	req, err := http.NewRequest(job.HTTPMethod, job.URL, body)
 	if err != nil {
 		panic(err)
+	}
+	// if the request contains a body, set the content type to json
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
 	}
 
 	// execute the HTTP request
