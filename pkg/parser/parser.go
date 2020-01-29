@@ -29,9 +29,5 @@ func ParseFile(filepath string) Config {
 	if err != nil {
 		panic(err)
 	}
-	// add an ID to each job
-	for i, j := range c.Jobs {
-		j.ID = i + 1
-	}
 	return c
 }
