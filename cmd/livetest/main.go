@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/rknizzle/livetest/pkg/datastore"
+	"github.com/rknizzle/livetest/pkg/datastore/postgres"
 	"github.com/rknizzle/livetest/pkg/parser"
 	"github.com/rknizzle/livetest/pkg/scheduler"
 	"os"
@@ -27,6 +29,13 @@ func main() {
 	}
 	// parse the config file
 	config := parser.ParseFile(file)
+
+	// create the connection to the datastore from the info in the config
+	var store datastore.Datastore
+	// only connect to postgres for now
+	store = &postgres.Postgres{}
+	store.Connect(config.Datastore)
+
 	// buffered response channel
 	// concurrency limit is specified in the config
 	resChan := make(chan scheduler.Result, config.Concurrency)
@@ -36,20 +45,10 @@ func main() {
 		scheduler.Schedule(j, time.Duration(j.Frequency)*time.Millisecond, resChan)
 	}
 	for res := range resChan {
-		for _, j := range config.Jobs {
-			if j.ID == res.ID {
-				// check for error
-				if res.Err != nil {
-					fmt.Println("Failing with error:")
-					fmt.Println(res.Err)
-					// check if response status code matches the expected status code
-				} else if res.Res.StatusCode == j.ExpectedResponse.StatusCode {
-					fmt.Println("passing")
-				} else {
-					fmt.Println("failing")
-				}
-			}
-		}
+		// check if the request has the expected response
+		record := scheduler.HandleResponse(res, config.Jobs)
+		// and write the data to the datastore
+		store.Write(record)
 	}
 }
 

@@ -7,7 +7,8 @@ LABEL maintainer="rtkennelly1@gmail.com"
 WORKDIR /app
 
 # Copy go module files
-COPY go.mod ./
+COPY go.mod go.sum ./
+
 
 # Download all dependencies
 RUN go mod download

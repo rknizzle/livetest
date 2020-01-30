@@ -12,6 +12,15 @@ import (
 type Config struct {
 	Jobs        []*job.Job `json:"jobs"`
 	Concurrency int        `json:"concurrency"`
+	Datastore   DatastoreConfig
+}
+
+type DatastoreConfig struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DBname   string
 }
 
 // Parses the specified config file and loads the data into a config object
@@ -28,10 +37,6 @@ func ParseFile(filepath string) Config {
 	err = jsonParser.Decode(&c)
 	if err != nil {
 		panic(err)
-	}
-	// add an ID to each job
-	for i, j := range c.Jobs {
-		j.ID = i + 1
 	}
 	return c
 }

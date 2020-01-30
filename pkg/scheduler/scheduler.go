@@ -5,6 +5,8 @@ package scheduler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/job"
 	"io"
 	"net/http"
@@ -12,9 +14,9 @@ import (
 )
 
 type Result struct {
-	ID  int
-	Res *http.Response
-	Err error
+	Title string
+	Res   *http.Response
+	Err   error
 }
 
 // Create a ticker for a job to trigger it periodically
@@ -61,6 +63,29 @@ func execute(job *job.Job, resChan chan<- Result) {
 	// execute the HTTP request
 	resp, err := client.Do(req)
 
-	r := Result{job.ID, resp, err}
+	r := Result{job.Title, resp, err}
 	resChan <- r
+}
+
+func HandleResponse(res Result, jobs []*job.Job) *datastore.Record {
+	for _, j := range jobs {
+		if j.Title == res.Title {
+			// check for error
+			if res.Err != nil {
+				j.Status = "failing"
+				fmt.Println("Failing with error:")
+				fmt.Println(res.Err)
+				// check if response status code matches the expected status code
+			} else if res.Res.StatusCode == j.ExpectedResponse.StatusCode {
+				j.Status = "passing"
+				fmt.Println("passing")
+			} else {
+				j.Status = "failing"
+				fmt.Println("failing")
+			}
+			// turn the result into a data record
+			return &datastore.Record{j.Status, j.Title, res.Res.StatusCode}
+		}
+	}
+	return nil
 }

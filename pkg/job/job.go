@@ -5,14 +5,13 @@
 package job
 
 type Job struct {
-	ID               int      `json:"id"`
-	Title            string   `json:"title"`
-	URL              string   `json:"url"`
-	HTTPMethod       string   `json:"httpMethod"`
-	Frequency        int      `json:"frequency"`
-	Status           string   `json:"status"`
-	ExpectedResponse Response `json:"expectedResponse"`
-	RequestBody map[string]interface{} `json:"requestBody"`
+	Title            string                 `json:"title"`
+	URL              string                 `json:"url"`
+	HTTPMethod       string                 `json:"httpMethod"`
+	Frequency        int                    `json:"frequency"`
+	Status           string                 `json:"status"`
+	ExpectedResponse Response               `json:"expectedResponse"`
+	RequestBody      map[string]interface{} `json:"requestBody"`
 }
 
 type Response struct {
