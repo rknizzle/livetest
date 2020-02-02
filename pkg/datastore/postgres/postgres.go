@@ -37,7 +37,7 @@ func (p *Postgres) Connect(config parser.DatastoreConfig) {
     CREATE TABLE IF NOT EXISTS executions (
       time timestamp,
       title TEXT,
-      status TEXT,
+      success BOOlEAN,
       status_code INT,
       PRIMARY KEY (time, title)
     );`
@@ -54,8 +54,8 @@ func (p *Postgres) Connect(config parser.DatastoreConfig) {
 func (p *Postgres) Write(r *datastore.Record) {
 
 	sqlStatement := fmt.Sprintf(`
-    INSERT INTO executions (time, title, status, status_code)
-    VALUES (NOW(), '%s', '%s', %d)`, r.Title, r.Status, r.StatusCode)
+    INSERT INTO executions (time, title, success, status_code)
+    VALUES (NOW(), '%s', '%t', %d)`, r.Title, r.Success, r.StatusCode)
 
 	_, err := p.db.Exec(sqlStatement)
 	if err != nil {
