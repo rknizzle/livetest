@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/job"
+	"github.com/rknizzle/livetest/pkg/notification"
 	"io"
 	"net/http"
 	"time"
@@ -67,7 +68,7 @@ func execute(job *job.Job, resChan chan<- Result) {
 	resChan <- r
 }
 
-func HandleResponse(res Result, jobs []*job.Job) *datastore.Record {
+func HandleResponse(res Result, jobs []*job.Job, n notification.Notification) *datastore.Record {
 	for _, j := range jobs {
 		if j.Title == res.Title {
 			// check for error
@@ -83,6 +84,10 @@ func HandleResponse(res Result, jobs []*job.Job) *datastore.Record {
 				j.Status = "failing"
 				fmt.Println("failing")
 			}
+			if j.Status == "failing" {
+				n.Notify()
+			}
+
 			// turn the result into a data record
 			return &datastore.Record{j.Status, j.Title, res.Res.StatusCode}
 		}
