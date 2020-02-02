@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/rknizzle/livetest/pkg/config"
 	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/datastore/postgres"
-	"github.com/rknizzle/livetest/pkg/config"
 	"github.com/rknizzle/livetest/pkg/scheduler"
 	"os"
 	"time"
@@ -30,11 +30,17 @@ func main() {
 	// parse the config file
 	config := config.Parse(file)
 
-	// create the connection to the datastore from the info in the config
+	hasDatastore := false
 	var store datastore.Datastore
-	// only connect to postgres for now
-	store = &postgres.Postgres{}
-	store.Connect(config.Datastore)
+	// create the connection to the datastore from the info in the config
+	if config.Datastore != nil {
+		// only connect to postgres for now
+		store = &postgres.Postgres{}
+		store.Connect(config.Datastore)
+		hasDatastore = true
+	} else {
+		fmt.Println("No datastore connection info in config. Running without database.")
+	}
 
 	// buffered response channel
 	// concurrency limit is specified in the config
@@ -49,7 +55,9 @@ func main() {
 		record := scheduler.HandleResponse(res, config.Jobs, config.Notification)
 
 		// and write the data to the datastore
-		store.Write(record)
+		if hasDatastore {
+			store.Write(record)
+		}
 	}
 }
 
