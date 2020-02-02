@@ -14,7 +14,7 @@ type Datastore interface {
 
 // Row of data to write to the database table
 type Record struct {
-	Status     string
+	Success    bool
 	Title      string
 	StatusCode int
 }
