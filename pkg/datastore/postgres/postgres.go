@@ -16,7 +16,7 @@ type Postgres struct {
 }
 
 // Connect to a postgres database and create
-func (p *Postgres) Connect(config datastore.Connection) {
+func (p *Postgres) Connect(config *datastore.Connection) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		config.Host, config.Port, config.User, config.Password, config.DBname)
