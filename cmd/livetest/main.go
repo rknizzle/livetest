@@ -46,7 +46,8 @@ func main() {
 	}
 	for res := range resChan {
 		// check if the request has the expected response
-		record := scheduler.HandleResponse(res, config.Jobs)
+		record := scheduler.HandleResponse(res, config.Jobs, config.Notification)
+
 		// and write the data to the datastore
 		store.Write(record)
 	}
