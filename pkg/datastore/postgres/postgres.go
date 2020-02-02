@@ -7,8 +7,8 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/config"
+	"github.com/rknizzle/livetest/pkg/datastore"
 )
 
 // Postgres struct implements Datastore interface
