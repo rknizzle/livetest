@@ -3,12 +3,12 @@
 package datastore
 
 import (
-	"github.com/rknizzle/livetest/pkg/parser"
+	"github.com/rknizzle/livetest/pkg/config"
 )
 
 // Datastore abstraction
 type Datastore interface {
-	Connect(parser.DatastoreConfig)
+	Connect(config.DatastoreConfig)
 	Write(*Record)
 }
 

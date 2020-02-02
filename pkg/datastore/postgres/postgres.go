@@ -8,7 +8,7 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/rknizzle/livetest/pkg/datastore"
-	"github.com/rknizzle/livetest/pkg/parser"
+	"github.com/rknizzle/livetest/pkg/config"
 )
 
 // Postgres struct implements Datastore interface
@@ -17,7 +17,7 @@ type Postgres struct {
 }
 
 // Connect to a postgres database and create
-func (p *Postgres) Connect(config parser.DatastoreConfig) {
+func (p *Postgres) Connect(config config.DatastoreConfig) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		config.Host, config.Port, config.User, config.Password, config.DBname)
