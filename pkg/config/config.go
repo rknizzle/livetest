@@ -14,16 +14,16 @@ import (
 type Config struct {
 	Jobs         []*job.Job                `json:"jobs"`
 	Concurrency  int                       `json:"concurrency"`
-	Datastore    datastore.Connection      `json:"datastore"`
+	Datastore    *datastore.Connection     `json:"datastore"`
 	Notification notification.Notification `json:"notification"`
 }
 
 // Config before unpacking the envelopes
 type Pre struct {
-	Jobs         []*job.Job           `json:"jobs"`
-	Concurrency  int                  `json:"concurrency"`
-	Datastore    datastore.Connection `json:"datastore"`
-	Notification Envelope             `json:"notification"`
+	Jobs         []*job.Job            `json:"jobs"`
+	Concurrency  int                   `json:"concurrency"`
+	Datastore    *datastore.Connection `json:"datastore"`
+	Notification Envelope              `json:"notification"`
 }
 
 // intermediate data structure for reading in dynamic json
