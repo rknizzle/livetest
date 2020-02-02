@@ -1,6 +1,6 @@
 // Package parser parses the config file and creates jobs, connects to database and sets up notifications
 
-package parser
+package config
 
 import (
 	"encoding/json"
@@ -53,7 +53,7 @@ func initializeNotification(e Envelope) notification.Notification {
 }
 
 // Parses the specified config file and loads the data into a config object
-func ParseFile(filepath string) *Config {
+func Parse(filepath string) *Config {
 	var pre Pre
 	// read in the config file
 	configFile, err := os.Open(filepath)
