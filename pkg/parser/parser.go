@@ -5,14 +5,24 @@ package parser
 import (
 	"encoding/json"
 	"github.com/rknizzle/livetest/pkg/job"
+	"github.com/rknizzle/livetest/pkg/notification"
 	"os"
 )
 
-// Stores the configuration
+// Stores the testing configuration
 type Config struct {
-	Jobs        []*job.Job `json:"jobs"`
-	Concurrency int        `json:"concurrency"`
-	Datastore   DatastoreConfig
+	Jobs         []*job.Job                `json:"jobs"`
+	Concurrency  int                       `json:"concurrency"`
+	Datastore    DatastoreConfig           `json:"datastore"`
+	Notification notification.Notification `json:"notification"`
+}
+
+// Config before unpacking the envelopes
+type Pre struct {
+	Jobs         []*job.Job      `json:"jobs"`
+	Concurrency  int             `json:"concurrency"`
+	Datastore    DatastoreConfig `json:"datastore"`
+	Notification Envelope        `json:"notification"`
 }
 
 type DatastoreConfig struct {
@@ -23,20 +33,43 @@ type DatastoreConfig struct {
 	DBname   string
 }
 
+// intermediate data structure for reading in dynamic json
+type Envelope struct {
+	Type string           `json:"type"`
+	Msg  *json.RawMessage `json:"msg"`
+}
+
+func initializeNotification(e Envelope) notification.Notification {
+	switch e.Type {
+	case "http":
+		var h notification.HTTPRequest
+		if err := json.Unmarshal(*e.Msg, &h); err != nil {
+			panic(err)
+		}
+		return h
+	default:
+		panic("Invalid notification type")
+	}
+}
+
 // Parses the specified config file and loads the data into a config object
-func ParseFile(filepath string) Config {
+func ParseFile(filepath string) *Config {
+	var pre Pre
 	// read in the config file
 	configFile, err := os.Open(filepath)
 	if err != nil {
 		panic(err)
 	}
-
-	// convert the JSON into a config object
-	c := Config{}
 	jsonParser := json.NewDecoder(configFile)
-	err = jsonParser.Decode(&c)
+	err = jsonParser.Decode(&pre)
 	if err != nil {
 		panic(err)
 	}
+
+	n := initializeNotification(pre.Notification)
+
+	// create the config object from JSON data
+	c := &Config{pre.Jobs, pre.Concurrency, pre.Datastore, n}
+
 	return c
 }
