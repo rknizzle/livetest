@@ -39,5 +39,14 @@
             "title": "example 2",
             "url": "http://example2.com"
         }
-    ]
+    ],
+    "notification": {
+        "msg": {
+            "headers": {},
+            "httpMethod": "POST",
+            "requestBody": {},
+            "url": "http://localhost:3001/notify"
+        },
+        "type": "http"
+    }
 }
