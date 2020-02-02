@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/datastore/postgres"
-	"github.com/rknizzle/livetest/pkg/parser"
+	"github.com/rknizzle/livetest/pkg/config"
 	"github.com/rknizzle/livetest/pkg/scheduler"
 	"os"
 	"time"
@@ -28,7 +28,7 @@ func main() {
 		file = "config.json"
 	}
 	// parse the config file
-	config := parser.ParseFile(file)
+	config := config.Parse(file)
 
 	// create the connection to the datastore from the info in the config
 	var store datastore.Datastore
