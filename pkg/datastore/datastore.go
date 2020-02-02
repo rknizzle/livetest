@@ -2,13 +2,9 @@
 
 package datastore
 
-import (
-	"github.com/rknizzle/livetest/pkg/config"
-)
-
 // Datastore abstraction
 type Datastore interface {
-	Connect(config.DatastoreConfig)
+	Connect(Connection)
 	Write(*Record)
 }
 
@@ -17,4 +13,12 @@ type Record struct {
 	Success    bool
 	Title      string
 	StatusCode int
+}
+
+type Connection struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DBname   string
 }
