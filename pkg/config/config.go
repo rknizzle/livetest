@@ -4,6 +4,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/job"
 	"github.com/rknizzle/livetest/pkg/notification"
@@ -41,7 +42,8 @@ func initializeNotification(e Envelope) notification.Notification {
 		}
 		return h
 	default:
-		panic("Invalid notification type")
+		fmt.Println("No valid notification type in config. Running without notification.")
+		return nil
 	}
 }
 

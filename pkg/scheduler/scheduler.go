@@ -85,7 +85,10 @@ func HandleResponse(res Result, jobs []*job.Job, n notification.Notification) *d
 				fmt.Println("failing")
 			}
 			if j.Success == false {
-				n.Notify()
+				// job has failed so trigger a notification if there is one
+				if n != nil {
+					n.Notify()
+				}
 			}
 
 			// turn the result into a data record
