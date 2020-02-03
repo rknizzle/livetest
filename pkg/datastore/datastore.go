@@ -2,19 +2,23 @@
 
 package datastore
 
-import (
-	"github.com/rknizzle/livetest/pkg/parser"
-)
-
 // Datastore abstraction
 type Datastore interface {
-	Connect(parser.DatastoreConfig)
+	Connect(*Connection)
 	Write(*Record)
 }
 
 // Row of data to write to the database table
 type Record struct {
-	Status     string
+	Success    bool
 	Title      string
 	StatusCode int
+}
+
+type Connection struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DBname   string
 }

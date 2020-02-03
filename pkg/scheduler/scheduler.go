@@ -73,23 +73,26 @@ func HandleResponse(res Result, jobs []*job.Job, n notification.Notification) *d
 		if j.Title == res.Title {
 			// check for error
 			if res.Err != nil {
-				j.Status = "failing"
+				j.Success = false
 				fmt.Println("Failing with error:")
 				fmt.Println(res.Err)
 				// check if response status code matches the expected status code
 			} else if res.Res.StatusCode == j.ExpectedResponse.StatusCode {
-				j.Status = "passing"
+				j.Success = true
 				fmt.Println("passing")
 			} else {
-				j.Status = "failing"
+				j.Success = false
 				fmt.Println("failing")
 			}
-			if j.Status == "failing" {
-				n.Notify()
+			if j.Success == false {
+				// job has failed so trigger a notification if there is one
+				if n != nil {
+					n.Notify()
+				}
 			}
 
 			// turn the result into a data record
-			return &datastore.Record{j.Status, j.Title, res.Res.StatusCode}
+			return &datastore.Record{j.Success, j.Title, res.Res.StatusCode}
 		}
 	}
 	return nil

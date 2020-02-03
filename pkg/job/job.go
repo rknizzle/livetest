@@ -9,7 +9,7 @@ type Job struct {
 	URL              string                 `json:"url"`
 	HTTPMethod       string                 `json:"httpMethod"`
 	Frequency        int                    `json:"frequency"`
-	Status           string                 `json:"status"`
+	Success          bool                   `json:"passing"`
 	ExpectedResponse Response               `json:"expectedResponse"`
 	RequestBody      map[string]interface{} `json:"requestBody"`
 }

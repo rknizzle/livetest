@@ -1,9 +1,11 @@
 // Package parser parses the config file and creates jobs, connects to database and sets up notifications
 
-package parser
+package config
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/job"
 	"github.com/rknizzle/livetest/pkg/notification"
 	"os"
@@ -13,24 +15,16 @@ import (
 type Config struct {
 	Jobs         []*job.Job                `json:"jobs"`
 	Concurrency  int                       `json:"concurrency"`
-	Datastore    DatastoreConfig           `json:"datastore"`
+	Datastore    *datastore.Connection     `json:"datastore"`
 	Notification notification.Notification `json:"notification"`
 }
 
 // Config before unpacking the envelopes
 type Pre struct {
-	Jobs         []*job.Job      `json:"jobs"`
-	Concurrency  int             `json:"concurrency"`
-	Datastore    DatastoreConfig `json:"datastore"`
-	Notification Envelope        `json:"notification"`
-}
-
-type DatastoreConfig struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	DBname   string
+	Jobs         []*job.Job            `json:"jobs"`
+	Concurrency  int                   `json:"concurrency"`
+	Datastore    *datastore.Connection `json:"datastore"`
+	Notification Envelope              `json:"notification"`
 }
 
 // intermediate data structure for reading in dynamic json
@@ -48,12 +42,13 @@ func initializeNotification(e Envelope) notification.Notification {
 		}
 		return h
 	default:
-		panic("Invalid notification type")
+		fmt.Println("No valid notification type in config. Running without notification.")
+		return nil
 	}
 }
 
 // Parses the specified config file and loads the data into a config object
-func ParseFile(filepath string) *Config {
+func Parse(filepath string) *Config {
 	var pre Pre
 	// read in the config file
 	configFile, err := os.Open(filepath)

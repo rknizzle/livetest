@@ -8,7 +8,6 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/rknizzle/livetest/pkg/datastore"
-	"github.com/rknizzle/livetest/pkg/parser"
 )
 
 // Postgres struct implements Datastore interface
@@ -17,7 +16,7 @@ type Postgres struct {
 }
 
 // Connect to a postgres database and create
-func (p *Postgres) Connect(config parser.DatastoreConfig) {
+func (p *Postgres) Connect(config *datastore.Connection) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		config.Host, config.Port, config.User, config.Password, config.DBname)
@@ -37,7 +36,7 @@ func (p *Postgres) Connect(config parser.DatastoreConfig) {
     CREATE TABLE IF NOT EXISTS executions (
       time timestamp,
       title TEXT,
-      status TEXT,
+      success BOOlEAN,
       status_code INT,
       PRIMARY KEY (time, title)
     );`
@@ -54,8 +53,8 @@ func (p *Postgres) Connect(config parser.DatastoreConfig) {
 func (p *Postgres) Write(r *datastore.Record) {
 
 	sqlStatement := fmt.Sprintf(`
-    INSERT INTO executions (time, title, status, status_code)
-    VALUES (NOW(), '%s', '%s', %d)`, r.Title, r.Status, r.StatusCode)
+    INSERT INTO executions (time, title, success, status_code)
+    VALUES (NOW(), '%s', '%t', %d)`, r.Title, r.Success, r.StatusCode)
 
 	_, err := p.db.Exec(sqlStatement)
 	if err != nil {
