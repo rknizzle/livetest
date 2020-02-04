@@ -56,9 +56,10 @@ func execute(job *job.Job, resChan chan<- Result) {
 	if err != nil {
 		panic(err)
 	}
-	// if the request contains a body, set the content type to json
-	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
+
+	// loop through each header and add it to request
+	for k, v := range job.Headers {
+		req.Header.Set(k, v.(string))
 	}
 
 	// execute the HTTP request
