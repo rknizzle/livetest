@@ -42,13 +42,15 @@ func main() {
 		fmt.Println("No datastore connection info in config. Running without database.")
 	}
 
-	// buffered response channel
+	// blocking channel
 	// concurrency limit is specified in the config
-	resChan := make(chan scheduler.Result, config.Concurrency)
+	blocker := make(chan struct{}, config.Concurrency)
+	// channel of request results
+	resChan := make(chan scheduler.Result)
 	// loop through each job
 	for _, j := range config.Jobs {
 		// and schedule the job to run at the specified interval
-		scheduler.Schedule(j, time.Duration(j.Frequency)*time.Millisecond, resChan)
+		scheduler.Schedule(j, time.Duration(j.Frequency)*time.Millisecond, resChan, blocker)
 	}
 	for res := range resChan {
 		// check if the request has the expected response
