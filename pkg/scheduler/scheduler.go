@@ -21,14 +21,14 @@ type Result struct {
 }
 
 // Create a ticker for a job to trigger it periodically
-func Schedule(j *job.Job, interval time.Duration, resChan chan<- Result) *time.Ticker {
+func Schedule(j *job.Job, interval time.Duration, resChan chan<- Result, blocker chan struct{}) *time.Ticker {
 	ticker := time.NewTicker(interval)
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				// run the job
-				execute(j, resChan)
+				execute(j, resChan, blocker)
 			}
 		}
 	}()
@@ -36,7 +36,8 @@ func Schedule(j *job.Job, interval time.Duration, resChan chan<- Result) *time.T
 }
 
 // Sends an HTTP request for a job
-func execute(job *job.Job, resChan chan<- Result) {
+func execute(job *job.Job, resChan chan<- Result, blocker chan struct{}) {
+	blocker <- struct{}{}
 	client := &http.Client{}
 
 	// set body to nil unless there is a RequestBody to add
@@ -67,6 +68,7 @@ func execute(job *job.Job, resChan chan<- Result) {
 
 	r := Result{job.Title, resp, err}
 	resChan <- r
+	<-blocker
 }
 
 func HandleResponse(res Result, jobs []*job.Job, n notification.Notification) *datastore.Record {
