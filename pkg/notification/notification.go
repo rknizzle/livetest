@@ -41,8 +41,9 @@ func (h HTTPRequest) Notify() {
 		panic(err)
 	}
 
-	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
+	// loop through each header and add it to request
+	for k, v := range h.Headers {
+		req.Header.Set(k, v.(string))
 	}
 
 	// execute the HTTP request

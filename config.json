@@ -17,7 +17,9 @@
                 "statusCode": 200
             },
             "frequency": 10000,
-            "headers": {},
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "httpMethod": "GET",
             "requestBody": {},
             "timeout": 3000,
@@ -32,7 +34,9 @@
                 "statusCode": 200
             },
             "frequency": 10000,
-            "headers": {},
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "httpMethod": "GET",
             "requestBody": {},
             "timeout": 3000,
@@ -42,7 +46,9 @@
     ],
     "notification": {
         "msg": {
-            "headers": {},
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "httpMethod": "POST",
             "requestBody": {},
             "url": "http://localhost:3001/notify"
