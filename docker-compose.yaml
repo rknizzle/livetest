@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 'postgres'
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+  livetest:
+    image: 'rkneills/livetest:latest'
+    links:
+      - db
+
+volumes:
+  database_data:
+    driver: local
