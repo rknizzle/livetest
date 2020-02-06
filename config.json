@@ -1,5 +1,5 @@
 {
-    "concurrency": 3,
+    "concurrency": 2,
     "datastore": {
         "db": "postgres",
         "dbname": "postgres",
@@ -11,48 +11,30 @@
     "jobs": [
         {
             "expectedResponse": {
-                "body": {
-                    "data": "true"
-                },
                 "statusCode": 200
             },
-            "frequency": 10000,
+            "frequency": 5000,
             "headers": {
-                "Content-Type": "application/json"
             },
             "httpMethod": "GET",
             "requestBody": {},
-            "timeout": 3000,
-            "title": "example 1",
-            "url": "http://example1.com"
+            "title": "example GET",
+            "url": "http://postman-echo.com/get?foo1=bar1&foo2=bar2"
         },
         {
             "expectedResponse": {
-                "body": {
-                    "data": "true"
-                },
                 "statusCode": 200
             },
-            "frequency": 10000,
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "httpMethod": "GET",
-            "requestBody": {},
-            "timeout": 3000,
-            "title": "example 2",
-            "url": "http://example2.com"
-        }
-    ],
-    "notification": {
-        "msg": {
+            "frequency": 8000,
             "headers": {
                 "Content-Type": "application/json"
             },
             "httpMethod": "POST",
-            "requestBody": {},
-            "url": "http://localhost:3001/notify"
-        },
-        "type": "http"
-    }
+            "requestBody": {
+              "data": "value"
+            },
+            "title": "example POST",
+            "url": "http://postman-echo.com/post"
+        }
+    ]
 }
