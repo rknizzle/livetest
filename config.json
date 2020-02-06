@@ -3,7 +3,7 @@
     "datastore": {
         "db": "postgres",
         "dbname": "postgres",
-        "host": "db",
+        "host": "localhost",
         "password": "password",
         "port": 5432,
         "user": "postgres"
