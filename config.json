@@ -3,7 +3,7 @@
     "datastore": {
         "db": "postgres",
         "dbname": "postgres",
-        "host": "localhost",
+        "host": "db",
         "password": "password",
         "port": 5432,
         "user": "postgres"
@@ -14,8 +14,7 @@
                 "statusCode": 200
             },
             "frequency": 5000,
-            "headers": {
-            },
+            "headers": {},
             "httpMethod": "GET",
             "requestBody": {},
             "title": "example GET",
@@ -31,10 +30,23 @@
             },
             "httpMethod": "POST",
             "requestBody": {
-              "data": "value"
+                "data": "value"
             },
             "title": "example POST",
             "url": "http://postman-echo.com/post"
         }
-    ]
+    ],
+    "notification": {
+        "msg": {
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "httpMethod": "POST",
+            "requestBody": {
+                "notification": "true"
+            },
+            "url": "http://postman-echo.com/post"
+        },
+        "type": "http"
+    }
 }
