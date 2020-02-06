@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/cenkalti/backoff"
 	"github.com/rknizzle/livetest/pkg/config"
 	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/datastore/postgres"
@@ -36,7 +37,28 @@ func main() {
 	if config.Datastore != nil {
 		// only connect to postgres for now
 		store = &postgres.Postgres{}
-		store.Connect(config.Datastore)
+
+		connect := func() error {
+			fmt.Println("Attempting database connection...")
+			err := store.Connect(config.Datastore)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+
+		fmt.Println("Starting connection to database")
+		// attempt to connect to the database with exponential backoff
+		bo := backoff.NewExponentialBackOff()
+		bo.MaxElapsedTime = 30 * time.Second
+		err := backoff.Retry(connect, bo)
+		if err != nil {
+			// exit if not able to make connection with database
+			fmt.Println("Database connection failed. Exiting now...")
+			return
+		}
+
+		fmt.Println("Successfully connected to database!")
 		hasDatastore = true
 	} else {
 		fmt.Println("No datastore connection info in config. Running without database.")

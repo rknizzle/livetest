@@ -4,7 +4,7 @@ package datastore
 
 // Datastore abstraction
 type Datastore interface {
-	Connect(*Connection)
+	Connect(*Connection) error
 	Write(*Record)
 }
 
