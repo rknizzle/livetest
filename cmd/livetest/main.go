@@ -58,6 +58,7 @@ func main() {
 			return
 		}
 
+		fmt.Println("Successfully connected to database!")
 		hasDatastore = true
 	} else {
 		fmt.Println("No datastore connection info in config. Running without database.")
