@@ -6,7 +6,6 @@ import (
 	"github.com/rknizzle/livetest/pkg/config"
 	"github.com/rknizzle/livetest/pkg/datastore"
 	"github.com/rknizzle/livetest/pkg/datastore/postgres"
-	"github.com/rknizzle/livetest/pkg/scheduler"
 	"os"
 	"time"
 )
@@ -67,20 +66,17 @@ func main() {
 	// blocking channel
 	// concurrency limit is specified in the config
 	blocker := make(chan struct{}, config.Concurrency)
-	// channel of request results
-	resChan := make(chan scheduler.Result)
+	// channel of job response as a record
+	recChan := make(chan datastore.Record)
 	// loop through each job
 	for _, j := range config.Jobs {
 		// and schedule the job to run at the specified interval
-		scheduler.Schedule(j, time.Duration(j.Frequency)*time.Millisecond, resChan, blocker)
+		j.Schedule(recChan, blocker, config.Notification)
 	}
-	for res := range resChan {
-		// check if the request has the expected response
-		record := scheduler.HandleResponse(res, config.Jobs, config.Notification)
-
-		// and write the data to the datastore
+	for rec := range recChan {
+		// and write the data record to the datastore
 		if hasDatastore {
-			store.Write(record)
+			store.Write(&rec)
 		}
 	}
 }
