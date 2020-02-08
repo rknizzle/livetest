@@ -28,7 +28,11 @@ func main() {
 		file = "config.json"
 	}
 	// parse the config file
-	config := config.Parse(file)
+	config, err := config.Parse(file)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	hasDatastore := false
 	var store datastore.Datastore
