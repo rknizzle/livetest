@@ -1,0 +1,37 @@
+{
+    "concurrency": 1,
+    "datastore": {
+        "db": "postgres",
+        "dbname": "postgres",
+        "host": "localhost",
+        "password": "password",
+        "port": 5432,
+        "user": "postgres"
+    },
+    "jobs": [
+        {
+            "expectedResponse": {
+                "statusCode": 200
+            },
+            "frequency": 5000,
+            "headers": {},
+            "httpMethod": "GET",
+            "requestBody": {},
+            "title": "example GET",
+            "url": "http://postman-echo.com/get?foo1=bar1&foo2=bar2"
+        }
+    ],
+    "notification": {
+        "msg": {
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "httpMethod": "POST",
+            "requestBody": {
+                "notification": "true"
+            },
+            "url": "http://postman-echo.com/post"
+        },
+        "type": "http"
+    }
+}
