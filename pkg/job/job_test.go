@@ -44,7 +44,7 @@ func Test(t *testing.T) {
 // run execute and expect a 200 response
 func testExecute(j Job) func(*testing.T) {
 	return func(t *testing.T) {
-		res := j.Execute()
+		res := j.execute()
 		fmt.Println("response:")
 		fmt.Println(res.res.StatusCode)
 		if res.res.StatusCode != 200 {
@@ -58,7 +58,7 @@ func testExecuteWithError(j Job) func(*testing.T) {
 	return func(t *testing.T) {
 		// test execute with a job with a missing URL
 		j.URL = ""
-		res := j.Execute()
+		res := j.execute()
 		if res.err == nil || res.res != nil {
 			t.Error("Execute did not return an error with a bad job")
 		}
@@ -72,8 +72,8 @@ func testHandleResponse(j Job) func(*testing.T) {
 			Status:     "200 OK",
 			StatusCode: 200,
 		}
-		result := result{response, nil}
-		expectedRecord := datastore.Record{true, "example", 200}
+		result := result{response, nil, 0 * time.Second}
+		expectedRecord := datastore.Record{true, "example", 200, 0 * time.Second}
 		record, _ := j.HandleResponse(result)
 		if record != expectedRecord {
 			t.Error("Incorrect record created")
@@ -89,7 +89,7 @@ func testNotificationFromHandleResponse(j Job) func(*testing.T) {
 			Status:     "200 OK",
 			StatusCode: 200,
 		}
-		result := result{response, nil}
+		result := result{response, nil, 0 * time.Second}
 		_, shouldNotify := j.HandleResponse(result)
 		if shouldNotify == false {
 			t.Error("shouldNotify boolean not set to true")
@@ -105,7 +105,7 @@ func testSchedule(j Job) func(*testing.T) {
 		notification := notification.HTTPRequest{}
 		j.Schedule(recChan, blocker, notification)
 
-		expectedRecord := datastore.Record{true, "example", 200}
+		expectedRecord := datastore.Record{true, "example", 200, 0 * time.Second}
 
 		// fail if no record is recieved in the channel in 10 seconds
 		go func() {
@@ -114,6 +114,7 @@ func testSchedule(j Job) func(*testing.T) {
 		}()
 
 		for rec := range recChan {
+			rec.Duration = 0 * time.Second
 
 			if rec != expectedRecord {
 				fmt.Println(rec)

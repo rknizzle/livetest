@@ -44,7 +44,7 @@ func (j Job) Schedule(recChan chan<- datastore.Record, blocker chan struct{}, n 
 				// has been reached it will block until there is room in the channel
 				blocker <- struct{}{}
 				// execute the job
-				res := j.Execute()
+				res := j.execute()
 				// handle the request response and format it into a database record
 				record, shouldNotify := j.HandleResponse(res)
 				// send the notification if the job failed
@@ -66,13 +66,13 @@ func (j Job) Schedule(recChan chan<- datastore.Record, blocker chan struct{}, n 
 // store the result of an http request
 // either a response or an error
 type result struct {
-	res *http.Response
-	err error
+	res      *http.Response
+	err      error
+	duration time.Duration
 }
 
 // Sends an HTTP request for a job
-func (j Job) Execute() result {
-	//blocker <- struct{}{}
+func (j Job) execute() result {
 	client := &http.Client{}
 
 	// set body to nil unless there is a RequestBody to add
@@ -99,9 +99,10 @@ func (j Job) Execute() result {
 	}
 
 	// execute the HTTP request
+	start := time.Now()
 	resp, err := client.Do(req)
 
-	return result{resp, err}
+	return result{resp, err, time.Since(start)}
 }
 
 // verify if the request got the expected result and format the data
@@ -130,7 +131,7 @@ func (j Job) HandleResponse(res result) (datastore.Record, bool) {
 
 	// turn the result into a data record
 	if res.res == nil {
-		return datastore.Record{j.Success, j.Title, 0}, shouldNotify
+		return datastore.Record{j.Success, j.Title, 0, res.duration}, shouldNotify
 	}
-	return datastore.Record{j.Success, j.Title, res.res.StatusCode}, shouldNotify
+	return datastore.Record{j.Success, j.Title, res.res.StatusCode, res.duration}, shouldNotify
 }
