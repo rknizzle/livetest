@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/cenkalti/backoff"
-	"github.com/rknizzle/livetest/pkg/config"
-	"github.com/rknizzle/livetest/pkg/datastore"
-	"github.com/rknizzle/livetest/pkg/datastore/postgres"
+	"github.com/rknizzle/livetest/config"
+	"github.com/rknizzle/livetest/datastore"
 	"os"
 	"time"
 )
@@ -39,7 +38,7 @@ func main() {
 	// create the connection to the datastore from the info in the config
 	if config.Datastore != nil {
 		// only connect to postgres for now
-		store = &postgres.Postgres{}
+		store = &datastore.Postgres{}
 
 		connect := func() error {
 			fmt.Println("Attempting database connection...")

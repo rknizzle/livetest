@@ -2,8 +2,8 @@ package job
 
 import (
 	"fmt"
-	"github.com/rknizzle/livetest/pkg/datastore"
-	"github.com/rknizzle/livetest/pkg/notification"
+	"github.com/rknizzle/livetest/datastore"
+	"github.com/rknizzle/livetest/notification"
 	"net/http"
 	"net/http/httptest"
 	"testing"

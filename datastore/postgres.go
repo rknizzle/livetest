@@ -1,14 +1,13 @@
-// Package postgres implements connection, table creation, and writing rows
+// Postgres datastore implements connection, table creation, and writing rows
 // to a postgres database
 
-package postgres
+package datastore
 
 import (
 	"database/sql"
 	"errors"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/rknizzle/livetest/pkg/datastore"
 	"time"
 )
 
@@ -18,7 +17,7 @@ type Postgres struct {
 }
 
 // Connect to a postgres database and create
-func (p *Postgres) Connect(config *datastore.Connection) error {
+func (p *Postgres) Connect(config *Connection) error {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		config.Host, config.Port, config.User, config.Password, config.DBname)
@@ -54,7 +53,7 @@ func (p *Postgres) Connect(config *datastore.Connection) error {
 }
 
 // Write a requests execution data to a new row
-func (p *Postgres) Write(r *datastore.Record) {
+func (p *Postgres) Write(r *Record) {
 	// get duration of request in milliseconds
 	duration := float64(r.Duration) / float64(time.Millisecond)
 
