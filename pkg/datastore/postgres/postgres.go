@@ -9,6 +9,7 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/rknizzle/livetest/pkg/datastore"
+	"time"
 )
 
 // Postgres struct implements Datastore interface
@@ -34,11 +35,12 @@ func (p *Postgres) Connect(config *datastore.Connection) error {
 	// create the table to store request execution results
 	// to track results over time
 	createStatement := `
-    CREATE TABLE IF NOT EXISTS executions (
+    CREATE TABLE IF NOT EXISTS request_data (
       time timestamp,
       title TEXT,
       success BOOlEAN,
       status_code INT,
+      duration double precision,
       PRIMARY KEY (time, title)
     );`
 
@@ -53,10 +55,12 @@ func (p *Postgres) Connect(config *datastore.Connection) error {
 
 // Write a requests execution data to a new row
 func (p *Postgres) Write(r *datastore.Record) {
+	// get duration of request in milliseconds
+	duration := float64(r.Duration) / float64(time.Millisecond)
 
 	sqlStatement := fmt.Sprintf(`
-    INSERT INTO executions (time, title, success, status_code)
-    VALUES (NOW(), '%s', '%t', %d)`, r.Title, r.Success, r.StatusCode)
+    INSERT INTO request_data (time, title, success, status_code, duration)
+    VALUES (NOW(), '%s', '%t', %d, %f)`, r.Title, r.Success, r.StatusCode, duration)
 
 	_, err := p.db.Exec(sqlStatement)
 	if err != nil {
