@@ -2,6 +2,10 @@
 
 package datastore
 
+import (
+	"time"
+)
+
 // Datastore abstraction
 type Datastore interface {
 	Connect(*Connection) error
@@ -13,6 +17,7 @@ type Record struct {
 	Success    bool
 	Title      string
 	StatusCode int
+	Duration   time.Duration
 }
 
 type Connection struct {
