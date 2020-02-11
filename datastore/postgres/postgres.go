@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/rknizzle/livetest/pkg/datastore"
+	"github.com/rknizzle/livetest/datastore"
 	"time"
 )
 

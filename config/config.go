@@ -5,9 +5,9 @@ package config
 import (
 	"encoding/json"
 	"errors"
-	"github.com/rknizzle/livetest/pkg/datastore"
-	"github.com/rknizzle/livetest/pkg/job"
-	"github.com/rknizzle/livetest/pkg/notification"
+	"github.com/rknizzle/livetest/datastore"
+	"github.com/rknizzle/livetest/job"
+	"github.com/rknizzle/livetest/notification"
 	"os"
 )
 

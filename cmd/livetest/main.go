@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/cenkalti/backoff"
-	"github.com/rknizzle/livetest/pkg/config"
-	"github.com/rknizzle/livetest/pkg/datastore"
-	"github.com/rknizzle/livetest/pkg/datastore/postgres"
+	"github.com/rknizzle/livetest/config"
+	"github.com/rknizzle/livetest/datastore"
+	"github.com/rknizzle/livetest/datastore/postgres"
 	"os"
 	"time"
 )
