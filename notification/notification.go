@@ -5,6 +5,7 @@ package notification
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -30,7 +31,8 @@ func (h HTTPRequest) Notify() {
 		// convert the body into an io.Reader to pass to the http request
 		requestByte, err := json.Marshal(h.RequestBody)
 		if err != nil {
-			panic(err)
+			fmt.Println("Error: Notification failed:")
+			fmt.Println(err)
 		}
 		body = bytes.NewBuffer(requestByte)
 	}
@@ -38,7 +40,8 @@ func (h HTTPRequest) Notify() {
 	// configure http request
 	req, err := http.NewRequest(h.HTTPMethod, h.URL, body)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error: Notification failed:")
+		fmt.Println(err)
 	}
 
 	// loop through each header and add it to request
@@ -49,6 +52,7 @@ func (h HTTPRequest) Notify() {
 	// execute the HTTP request
 	_, err = client.Do(req)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error: Notification failed:")
+		fmt.Println(err)
 	}
 }
