@@ -1,5 +1,5 @@
 # livetest
-#### livetest is a continous testing service/tool for testing backend endpoints/features in development or production environments. Periodically request a collection of endpoints and verify the response with the option to store results in a database and send a notification when a request fails
+#### livetest is a continous testing service/tool for testing backend endpoints/features in development or production environments. Test endpoints, get notified when they are down, and track response time
 
 # Get Started
 
@@ -7,30 +7,34 @@
 ```
 $ go get -u github.com/rknizzle/livetest/cmd/livetest
 ```
-NOTE: Must include a config file to run with the binary
+Must include a config.json file with the binary and start with:
+
+`livetest` or `livetest config.json`
 
 
-## Test locally with Docker Compose
+## Test example with Docker Compose
 ```
 docker-compose up
 ```
 
+# Visualization
+### Connect datastore to grafana to visualize time taken to complete requests over time
+![grafana](images/graphs.png)
+
+#### Instruction to install grafana: https://grafana.com/docs/grafana/latest/installation/
+
 # Config
 
 ### concurrency
-#### number of requests that can run at the same time
+number of requests that can run at the same time
 
 ### datastore
-#### Store the result of each request to track responses over time  
-Supported datastores:
-- postgres
+Store the result of each request to track responses over time. Initial supported database: Postgresql
 
 ### notification
-#### Send out a notification if a request fails or returns a bad response  
-Supported notifications:
-- HTTP request
+Send out a notification if a request fails or returns an unexpected response. Initial supported notifications: HTTP Request
 
-### Example config:
+## Config Example:
 ```
 {
     "concurrency": 2,
@@ -47,7 +51,7 @@ Supported notifications:
             "expectedResponse": {
                 "statusCode": 200
             },
-            "frequency": 5000,
+            "frequency": 10000,
             "headers": {},
             "httpMethod": "GET",
             "requestBody": {},
@@ -58,7 +62,7 @@ Supported notifications:
             "expectedResponse": {
                 "statusCode": 200
             },
-            "frequency": 8000,
+            "frequency": 15000,
             "headers": {
                 "Content-Type": "application/json"
             },
