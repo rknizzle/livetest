@@ -1,5 +1,5 @@
 # livetest
-#### livetest is a continous testing service/tool for testing backend endpoints/features in development or production environments. Test endpoints, get notified when they are down, and track response time
+#### livetest is a continuous testing service/tool for testing backend endpoints/features in development or production environments. Test endpoints, get notified when they are down, and track response time
 
 # Get Started
 
